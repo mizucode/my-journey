@@ -1,50 +1,110 @@
-# Welcome to your Expo app 👋
+# Pembelajaran IPAS - Game Based Learning Geografi Jawa Barat
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+Aplikasi pembelajaran interaktif untuk siswa SD yang mempelajari geografi kabupaten di Jawa Barat dengan sistem game based learning dan integrasi AI Gemini.
 
-## Get started
+## Fitur Utama
 
-1. Install dependencies
+- **Login System**: User memasukkan nama dan kelas yang disimpan di memori HP
+- **Home Screen**: Menampilkan skor total dan daftar kabupaten Jawa Barat
+- **Sistem Misi**: Kabupaten harus dikerjakan secara berurutan (terkunci sampai misi sebelumnya selesai)
+- **Deskripsi Kabupaten**: Informasi lengkap tentang kabupaten menggunakan AI Gemini
+- **Quiz Interaktif**: 5 soal pilihan ganda per kabupaten dengan 3 opsi jawaban
+- **Sistem Skor**: Tracking skor per quiz dan skor total
 
-   ```bash
-   npm install
-   ```
+## Setup Aplikasi
 
-2. Start the app
-
-   ```bash
-   npx expo start
-   ```
-
-In the output, you'll find options to open the app in a
-
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
-
+### 1. Install Dependensi
 ```bash
-npm run reset-project
+npm install @react-native-async-storage/async-storage axios
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+### 2. Setup API Key Gemini
+1. Dapatkan API key dari [Google AI Studio](https://makersuite.google.com/app/apikey)
+2. Buat file `.env` di root project
+3. Tambahkan API key:
+```
+EXPO_PUBLIC_GEMINI_API_KEY=your_gemini_api_key_here
+```
 
-## Learn more
+**Catatan**: Aplikasi menggunakan model `gemini-2.5-flash` dengan endpoint:
+```
+https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=YOUR_API_KEY
+```
 
-To learn more about developing your project with Expo, look at the following resources:
+### 3. Jalankan Aplikasi
+```bash
+npx expo start
+```
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+## Struktur Aplikasi
 
-## Join the community
+```
+my-journey/
+├── app/
+│   ├── _layout.tsx              # Layout utama dengan AuthContext
+│   ├── login.tsx                # Halaman login
+│   ├── (tabs)/
+│   │   ├── index.tsx            # Home screen dengan daftar kabupaten
+│   │   └── deskripsi.tsx        # Deskripsi kabupaten
+│   └── quiz/
+│       └── [id].tsx             # Halaman quiz per kabupaten
+├── context/
+│   └── AuthContext.tsx          # Context untuk autentikasi
+├── constants/
+│   └── kabupaten.ts             # Data kabupaten Jawa Barat
+├── utils/
+│   └── storage.ts               # Helper AsyncStorage
+└── package.json
+```
 
-Join our community of developers creating universal apps.
+## Cara Penggunaan
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+1. **Login**: Masukkan nama dan kelas
+2. **Home**: Lihat skor dan pilih kabupaten yang tersedia (tidak terkunci)
+3. **Deskripsi**: Baca informasi kabupaten dari AI Gemini
+4. **Quiz**: Jawab 5 soal pilihan ganda
+5. **Progress**: Kabupaten berikutnya akan terbuka setelah menyelesaikan quiz
+
+## Teknologi yang Digunakan
+
+- **React Native** dengan Expo
+- **Expo Router** untuk navigasi
+- **AsyncStorage** untuk penyimpanan data lokal
+- **Axios** untuk HTTP requests
+- **Google Gemini AI 2.5 Flash** untuk generate konten
+- **TypeScript** untuk type safety
+
+## Data Kabupaten
+
+Aplikasi mencakup 26 kabupaten/kota di Jawa Barat:
+- 17 Kabupaten
+- 9 Kota
+
+Setiap kabupaten memiliki:
+- ID unik
+- Nama kabupaten
+- Deskripsi default
+- Soal quiz yang di-generate oleh AI
+
+## Sistem Skor
+
+- Setiap jawaban benar = +1 skor
+- Skor per quiz = jumlah jawaban benar (0-5)
+- Skor total = akumulasi dari semua quiz yang diselesaikan
+- Progress = jumlah kabupaten yang telah diselesaikan
+
+## API Integration
+
+Aplikasi menggunakan Google Gemini AI dengan:
+- **Model**: `gemini-2.5-flash`
+- **Endpoint**: `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=YOUR_API_KEY`
+- **Authentication**: API key sebagai query parameter
+- **Fallback**: Jika API tidak tersedia, menggunakan konten default
+
+## Catatan Penting
+
+- Pastikan API key Gemini sudah diset dengan benar
+- Aplikasi memerlukan koneksi internet untuk generate konten AI
+- Data user disimpan secara lokal di device
+- Progress dan skor akan hilang jika data aplikasi dihapus
+- Jika API key tidak valid atau tidak tersedia, aplikasi akan menggunakan konten default
