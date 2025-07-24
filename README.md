@@ -101,6 +101,7 @@ Aplikasi menggunakan Google Gemini AI dengan:
 - **Authentication**: API key sebagai query parameter
 - **Fallback**: Jika API tidak tersedia, menggunakan konten default
 
+
 ## Catatan Penting
 
 - Pastikan API key Gemini sudah diset dengan benar
@@ -108,3 +109,9 @@ Aplikasi menggunakan Google Gemini AI dengan:
 - Data user disimpan secara lokal di device
 - Progress dan skor akan hilang jika data aplikasi dihapus
 - Jika API key tidak valid atau tidak tersedia, aplikasi akan menggunakan konten default
+
+---
+
+## Lisensi Penelitian
+
+Aplikasi ini digunakan untuk keperluan penelitian oleh ibu **Yani Fitriyani, M.Pd**. Seluruh kode, data, dan konten aplikasi hanya diperuntukkan sebagai bagian dari penelitian akademik dan tidak untuk tujuan komersial. Hak cipta dan penggunaan aplikasi tunduk pada ketentuan penelitian yang berlaku.

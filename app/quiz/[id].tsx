@@ -5,7 +5,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { kabupatenJabar } from '../../constants/kabupaten';
 import { useAuth } from '../../context/AuthContext';
 
-const GEMINI_API_KEY = 'AIzaSyA7yHrn-i_OD2aL-K5CvaipEoO6-J3sWgQ';
+const GEMINI_API_KEY = 'AIzaSyCEATJTwE5tevT-RzhKgLXBxooR6NPBTC4';
 const GEMINI_ENDPOINT = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_API_KEY}`;
 
 interface Soal {
@@ -138,15 +138,12 @@ export default function Quiz() {
     if (isCorrect) setSkor(prev => prev + 1);
     
     if (newTotal >= QUESTIONS_PER_SESSION) {
-      // Quiz selesai, simpan skor
-      if (user) {
-        await updateKabupatenScoreAndProgress(Number(id), skor, user.progress + 1);
-        const totalSkor = getTotalScore();
-        setFeedback({
-          status: 'selesai',
-          penjelasan: 'Kuis selesai! Hebat, kamu sudah menjawab semua pertanyaan.',
-        });
-      }
+      // Quiz selesai, TAPI JANGAN simpan skor di sini untuk menghindari duplikasi.
+      // Cukup set feedback 'selesai'. Penyimpanan akan dilakukan di handleNext.
+      setFeedback({
+        status: 'selesai',
+        penjelasan: 'Kuis selesai! Hebat, kamu sudah menjawab semua pertanyaan.',
+      });
     } else {
       setFeedback({ 
         status: isCorrect ? 'benar' : 'salah', 
@@ -158,7 +155,9 @@ export default function Quiz() {
   const handleNext = async () => {
     if (feedback?.status === 'selesai') {
       if (user) {
-        const newProgress = user.progress + 1;
+        // Cari index dari kabupaten saat ini untuk menghitung progres dengan benar.
+        const currentIndex = kabupatenJabar.findIndex(k => k.id === Number(id));
+        const newProgress = Math.max(user.progress, currentIndex + 1);
         
         // Update skor untuk kabupaten ini dan progress sekaligus
         await updateKabupatenScoreAndProgress(Number(id), skor, newProgress);
